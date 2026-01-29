@@ -10,10 +10,15 @@ let io;
 const onlineUsers = new Map();
 const activeChats = new Map();
 
+
 export const initSocket = (server) => {
   io = new Server(server, {
     cors: {
-      origin: "http://localhost:5173",
+      origin: [
+        "http://localhost:5173",
+        "https://panikkaran.vercel.app",
+      ],
+      methods: ["GET", "POST"],
       credentials: true,
     },
   });
@@ -22,6 +27,11 @@ export const initSocket = (server) => {
     console.log("🔌 Connected:", socket.id);
 
     socket.isOfflineHandled = false;
+  });
+};
+
+export { io };
+
 
     /* ================= PRESENCE ================= */
 
