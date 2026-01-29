@@ -22,12 +22,12 @@ export const notifyAppointmentRequested = async ({
   worker,
   job,
 }) => {
-  // Employer
+  /* ---------- EMPLOYER (REQUESTER) ---------- */
   if (employer?._id) {
     if (employer.email) {
       sendEmail(
         employer.email,
-        "New Appointment Request",
+        "Appointment Request Sent",
         appointmentRequestedEmail({
           name: employer.name,
           jobTitle: job.title,
@@ -35,25 +35,20 @@ export const notifyAppointmentRequested = async ({
       );
     }
 
-    const content = notificationMessages.APPOINTMENT_REQUESTED({
-      name: worker.name,
-      jobTitle: job.title,
-    });
-
     await createNotification({
       userId: employer._id,
-      title: content.title,
-      message: content.message,
+      title: "Appointment Requested",
+      message: `You requested an appointment for ${job.title}`,
       type: "APPOINTMENT_REQUESTED",
     });
   }
 
-  // Worker
+  /* ---------- WORKER (RECEIVER) ---------- */
   if (worker?._id) {
     if (worker.email) {
       sendEmail(
         worker.email,
-        "Appointment Request Sent",
+        "New Appointment Request",
         appointmentRequestedEmail({
           name: worker.name,
           jobTitle: job.title,
@@ -61,10 +56,15 @@ export const notifyAppointmentRequested = async ({
       );
     }
 
+    const content = notificationMessages.APPOINTMENT_REQUESTED({
+      name: employer.name, // ✅ WHO requested
+      jobTitle: job.title,
+    });
+
     await createNotification({
       userId: worker._id,
-      title: "Appointment Requested",
-      message: `You requested an appointment for ${job.title}`,
+      title: content.title,
+      message: content.message,
       type: "APPOINTMENT_REQUESTED",
     });
   }
@@ -75,7 +75,7 @@ export const notifyAppointmentAccepted = async ({
   worker,
   job,
 }) => {
-  // Worker
+  /* ---------- WORKER (REQUESTER GETS UPDATE) ---------- */
   if (worker?._id) {
     if (worker.email) {
       sendEmail(
@@ -100,7 +100,7 @@ export const notifyAppointmentAccepted = async ({
     });
   }
 
-  // Employer
+  /* ---------- EMPLOYER (ACTOR) ---------- */
   if (employer?._id) {
     if (employer.email) {
       sendEmail(
@@ -127,7 +127,7 @@ export const notifyAppointmentRejected = async ({
   worker,
   job,
 }) => {
-  // Worker
+  /* ---------- WORKER ---------- */
   if (worker?._id) {
     if (worker.email) {
       sendEmail(
@@ -152,7 +152,7 @@ export const notifyAppointmentRejected = async ({
     });
   }
 
-  // Employer
+  /* ---------- EMPLOYER ---------- */
   if (employer?._id) {
     if (employer.email) {
       sendEmail(
@@ -275,6 +275,8 @@ export const notifyJobCompleted = async ({
     });
   }
 };
+
+/* ================= JOB POST ================= */
 
 export const notifyNewJobPosted = async ({
   user,
