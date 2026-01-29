@@ -18,10 +18,11 @@ const app = express();
 
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: true,
     credentials: true,
   })
 );
+
 
 app.use(express.json());
 
@@ -30,20 +31,20 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use("/auth", authRoutes);
-app.use("/profile", profileRoutes);
-app.use("/jobs", jobRoutes);
-app.use("/upload", uploadRoutes);
-app.use("/admin", adminRoutes);
-app.use("/appointments", appointmentRoutes);
-app.use("/users", userRoutes);
-app.use("/reports", reportRoutes);
-app.use("/notifications", notificationRoutes);
-app.use("/messages", protect, messageRoutes);
-app.use("/chats", protect, chatRoutes);
+app.use("/api/auth", authRoutes);
+app.use("/api/profile", profileRoutes);
+app.use("/api/jobs", jobRoutes);
+app.use("/api/upload", uploadRoutes);
+app.use("/api/admin", adminRoutes);
+app.use("/api/appointments", appointmentRoutes);
+app.use("/api/users", userRoutes);
+app.use("/api/reports", reportRoutes);
+app.use("/api/notifications", notificationRoutes);
+app.use("/api/messages", protect, messageRoutes);
+app.use("/api/chats", protect, chatRoutes);
 
 
-app.get("/", (req, res) => {
+app.get("/api", (req, res) => {
   res.send("✅ Panikkaran API is running...");
 });
 
