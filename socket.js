@@ -10,7 +10,6 @@ let io;
 const onlineUsers = new Map();
 const activeChats = new Map();
 
-
 export const initSocket = (server) => {
   io = new Server(server, {
     cors: {
@@ -27,11 +26,6 @@ export const initSocket = (server) => {
     console.log("🔌 Connected:", socket.id);
 
     socket.isOfflineHandled = false;
-  });
-};
-
-export { io };
-
 
     /* ================= PRESENCE ================= */
 
