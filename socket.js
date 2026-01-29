@@ -35,6 +35,8 @@ export const initSocket = (server) => {
       const uid = String(userId);
       socket.userId = uid;
 
+       socket.join(uid);
+
       if (!onlineUsers.has(uid)) {
         onlineUsers.set(uid, new Set());
       }
