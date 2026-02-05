@@ -100,4 +100,37 @@ router.delete("/:chatId", async (req, res) => {
   }
 });
 
+/* ================= GET UNREAD CHAT COUNTS ================= */
+router.get("/unread-counts", async (req, res) => {
+  try {
+    const userId = String(req.user.id);
+
+    const unread = await Notification.aggregate([
+      {
+        $match: {
+          user: userId,
+          type: "message",
+          isRead: false,
+        },
+      },
+      {
+        $group: {
+          _id: "$meta.chatId",
+          count: { $sum: "$meta.count" },
+        },
+      },
+    ]);
+
+    const map = {};
+    unread.forEach((n) => {
+      map[n._id] = n.count;
+    });
+
+    res.json(map);
+  } catch (err) {
+    console.error("Unread counts error:", err);
+    res.status(500).json({ message: "Failed to load unread counts" });
+  }
+});
+
 export default router;
